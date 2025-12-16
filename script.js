@@ -182,7 +182,7 @@ var typed = new Typed('.multiple-text', {
 });
 
 /* =========================================
-   CONTACT FORM VALIDATION
+   EMAILJS CONTACT FORM (FIXED)
    ========================================= */
 
 const contactForm = document.getElementById("contactForm");
@@ -195,29 +195,44 @@ if (contactForm) {
     const email = document.getElementById("email").value.trim();
     const message = document.getElementById("message").value.trim();
 
-    // Name validation
     if (name.length < 3) {
-      alert("Please enter your full name (at least 3 characters).");
+      alert("Please enter your full name.");
       return;
     }
 
-    // Email validation (regex)
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
       alert("Please enter a valid email address.");
       return;
     }
 
-    // Message validation
     if (message.length < 10) {
-      alert("Your message must be at least 10 characters long.");
+      alert("Message must be at least 10 characters long.");
       return;
     }
 
-    // Success (placeholder)
-    alert("Message sent successfully! 🚀");
+    const templateParams = {
+      name: name,
+      email: email,
+      message: message,
+      time: new Date().toLocaleString(),
+    };
 
-    // Reset form
-    contactForm.reset();
+    emailjs
+      .send(
+        "service_b836pk3",     // 🔴 YOUR SERVICE ID
+        "template_730vr64",    // 🔴 YOUR TEMPLATE ID
+        templateParams
+      )
+      .then(
+        function () {
+          alert("Message sent successfully! 🚀");
+          contactForm.reset();
+        },
+        function (error) {
+          alert("Failed to send message ❌");
+          console.error("EmailJS Error:", error);
+        }
+      );
   });
 }
